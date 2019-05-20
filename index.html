@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/javascript" src="js/mobile-detect.min.js"></script>
+<script>
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                    var pair = vars[i].split("=");
+                    if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
+
+        var md = new MobileDetect(window.navigator.userAgent);
+        if (md.mobile() && !getQueryVariable("force_desktop")) {
+            location.href = "index_mobile.html";
+        }
+    </script>
+<script>
+        var MOBILE_DEVICE = false;
+    </script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123687822-1"></script>
+<script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-123687822-1', { 'anonymize_ip': true });
+    </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="description" content="Battlepoint.io is a fast paced multiplayer battle royale game!">
+<meta name="keywords" content="battlepoint, io, game, shooter, multiplayer, online, fast, nightpoint, battle, royale, battle royale">
+<meta name="author" content="Sarunas Visockas">
+<title>Battlepoint.io - Fast Paced Online Battle Royale</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="ui.css">
+<link rel="stylesheet" href="radio.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+<link rel="stylesheet" href="icons.css">
+<script>
+        window.factorem = {};
+        window.factorem.slotSizes =  [
+            [[728,90]],
+            [[300, 250],[300,600]],
+            [[300,250]],
+            [[728,90]],
+            [[728, 90]],
+            [[300,250]],
+            [[160,600]],
+            [[160,600]],
+        ];
+        var script = document.createElement('script');
+        var tstamp = new Date();
+        script.id = 'factorem';
+        script.src = '//cdm.cursecdn.com/js/battlepoint/cdmfactorem_min.js?sec=home&misc=' + tstamp.getTime();
+        script.async = false;
+        script.type='text/javascript';
+        document.head.appendChild(script);
+    </script>
+
+</head>
+<body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/phaser.min.js"></script>
+<script type="text/javascript" src="js/phaser-debug.js"></script>
+<script type="text/javascript" src="js/soundjs.min.js"></script>
+<script type="text/javascript" src="js/versionGetter.js"></script>
+<div id="game_container" class="hidden">
+<div id="ui_container" class="hidden">
+<div id="weapon_ui_container">
+<div class="weapon_button round_border" id="weapon_ui_button_1" onclick="UI.weaponsUIController.onUIWeaponClick(0)">
+<img src="/assets/sprites/entities/weapons/hands.png" class="weapon_button_image" id="weapon_button_image_1" />
+1
+</div>
+<div class="weapon_button round_border" id="weapon_ui_button_2" onclick="UI.weaponsUIController.onUIWeaponClick(1)">
+<img src="/assets/sprites/entities/weapons/hands.png" class="weapon_button_image" id="weapon_button_image_2" />
+2
+</div>
+<div class="weapon_button round_border hidden" id="weapon_ui_button_3" onclick="UI.weaponsUIController.onUIWeaponClick(2)">
+<img src="/assets/sprites/entities/weapons/hands.png" class="weapon_button_image" id="weapon_button_image_3" />
+3
+</div>
+</div>
+<div id="items_ui_container">
+<div class="item_button round_border" id="sniperammo_item_container">
+<img src="/assets/sprites/entities/weapons/sniperammoboxonly.png" class="item_button_image" id="sniperammo_image" />
+<div class="item_button_text" id="sniperammo_item_container_text">0</div>
+</div>
+<div class="item_button round_border" id="shotgunammo_item_container">
+<img src="/assets/sprites/entities/weapons/shotgunammoboxonly.png" class="item_button_image" id="shotgunammo_image" />
+<div class="item_button_text" id="shotgunammo_item_container_text">0</div>
+</div>
+<div class="item_button round_border" id="rifleammo_item_container">
+<img src="/assets/sprites/entities/weapons/rifleammoboxonly.png" class="item_button_image" id="rifleammo_image" />
+<div class="item_button_text" id="rifleammo_item_container_text">0</div>
+</div>
+<div class="item_button round_border" id="pistolammo_item_container">
+<img src="/assets/sprites/entities/weapons/pistolammoboxonly.png" class="item_button_image" id="pistolammo_image" />
+<div class="item_button_text" id="pistolammo_item_container_text">0</div>
+</div>
+<div class="item_button round_border" id="bandage_item_container">
+<img src="/assets/sprites/entities/weapons/bandage.png" class="item_button_image" id="bandage_image" />
+<div class="item_button_text" id="bandage_counter">0</div>
+</div>
+<div class="item_button round_border" id="healthpack_item_container">
+<img src="/assets/sprites/entities/weapons/healthpack.png" class="item_button_image" id="healthpack_image" />
+<div class="item_button_text" id="healthpack_counter">0</div>
+</div>
+<div class="item_button round_border" id="grenades_item_container">
+<img src="/assets/sprites/entities/weapons/grenade.png" class="item_button_image" id="grenade_image" />
+<div class="item_button_text" id="grenade_counter">0</div>
+</div>
+</div>
+<div id="ammo_indicator" class="ui_indicator round_border">
+<img src="/assets/sprites/ui/ammo_icon.svg" id="ammo_indicator_image" />
+<div id="ammo_indicator_text">30 | 120</div>
+</div>
+<div id="health_indicator_container" class="ui_indicator round_border">
+<div id="health_bar" class="round_border"></div>
+</div>
+<div id="minimap_area_container">
+<div id="minimap_container">
+<div id="minimap_zoom">
+<img id="minimap_image" src="/assets/map/minimap.png" />
+<svg id="minimap_circle_white" class="minimap_circle" x="0" y="0" height="100" width="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" height="100" width="100" />
+</svg>
+<svg class="minimap_circle_red" width="100" height="100" viewBox="0 0 100 100">
+<defs>
+<mask id="myMask" x="0" y="0" width="100" height="100">
+<rect width="100" height="100" fill="white" />
+<rect id="minimap_circle_red" x="0" y="0" height="100" width="100" fill="black" />
+</mask>
+</defs>
+<rect x="0" y="0" width="100" height="100" fill="rgba(240, 0, 0, 0.3)" mask="url(#myMask)"></rect>
+</svg>
+<img id="player_map_icon" src="/assets/sprites/ui/player_map_icon.svg" />
+</div>
+</div>
+<div class="sound_volume_selector_container">
+<img class="volume_selector_image" src="/assets/sprites/ui/sound.svg">
+<input id="sound_volume_slider" class="volume_slider" type="range" min="0" max="1" step="0.01" oninput="changeSoundEffectsGlobalVolume(this.value)">
+</div>
+<div class="music sound_volume_selector_container">
+<img class="volume_selector_image" src="/assets/sprites/ui/music.svg">
+<input id="music_volume_slider" class="volume_slider" type="range" min="0" max="1" step="0.01" oninput="changeMusicEffectsGlobalVolume(this.value)">
+</div>
+<div id="map_circle_timer_container">
+<img id="map_circle_timer_image" src="/assets/sprites/ui/map_clock.svg">
+<div id="map_circle_timer_text">0:00</div>
+</div>
+</div>
+<div id="leaderboard_container" class="round_border">
+<div id="player_alive_count_text">0 left</div>
+</div>
+<div id="debug_stats">Server: Ping: 0 Fps: 0</div>
+<div id="game_state_text_container">
+<div id="spectate_options" class="hidden">
+<div class="btn input_bottom_margin" onclick="window.UI.deathScreenUIController.onClickPlayNewGame();">
+Play New Game
+</div>
+<div class="green btn" onclick="window.location.reload();">
+Back To Main Menu
+</div>
+</div>
+<div id="spectate_text" class="hidden">
+Spectating
+</div>
+<div id="waiting_for_players_text" class="hidden">
+Waiting For Players
+</div>
+<div id="timer_start_text" class="hidden">
+0
+</div>
+<div id="lost_connection_text" class="hidden">
+Lost Connection to Server
+</div>
+</div>
+</div>
+<div id="death_screen" class="hidden">
+<div id="death_screen_winner_message">
+Winner!
+</div>
+<div id="death_screen_stats_container">
+<div class="death_screen_stats">
+<div class="death_screen_stats_title input_bottom_margin" id="death_screen_player_name">
+Klonas
+</div>
+<div class="death_screen_stats_text input_bottom_margin">
+Players left:
+</div>
+
+<div class="death_screen_stats_text input_bottom_margin">
+Kills:
+</div>
+<div id="death_screen_stats_player_number" class="death_screen_stats_player_number">
+#
+</div>
+</div>
+</div>
+<div id="death_screen_button_container" class="hidden">
+<form class="login_form">
+<div class="btn input_bottom_margin" onclick="window.UI.deathScreenUIController.onClickPlayNewGame();">
+Play New Game
+</div>
+<div class="btn input_bottom_margin" onclick="window.UI.deathScreenUIController.onClickSpectate();">
+Spectate
+</div>
+<div class="green btn" onclick="window.location.reload();">
+Back To Main Menu
+</div>
+</form>
+</div>
+</div>
+</div>
+<div id="main_page">
+<div id="main_page_background_image"></div>
+<div class="logo pixelated">BATTLEPOINT.io</div>
+<div class="update-message">
+<p id="update-text">The MOBILE update!</p>
+</div>
+<a class="google_play_container" href='https://play.google.com/store/apps/details?id=com.battlepoint.saras.battlepointio&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+<img class="google_play_image" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' />
+</a>
+<div id="player_options_container">
+<div id="progress_game_wins" class="player_options_level">Game Wins: </div>
+<div id="progress_players_eliminated" class="player_options_level">Players Eliminated: </div>
+<div class="player_selected_skins_display">
+<img id="player_skin_display" src="\assets\sprites\entities\p1\05.png">
+<img id="player_gun_display" src="\assets\sprites\entities\weapons\ak47.png">
+</div>
+<div class="btn skin_select_button" onclick="try{window.showPlayerSkinSelection() }catch(ex){}">Player Skins</div>
+
+</div>
+<form class="login_form" onsubmit="startGame(document.getElementById('name_text').value); return false;">
+<input type="text" id="name_text" class="login_field input_bottom_margin" placeholder="Name" maxlength="15" autocomplete="off">
+<div class="select input_bottom_margin">
+<select id="server_list">
+<option value="eu">Loading</option>
+
+</select>
+</div>
+
+<div class="input_bottom_margin form_label">High Graphics: &nbsp; </div>
+<label class="switch">
+<input id='graphics_checkbox' type="checkbox" checked>
+<span class="slider"></span>
+</label>
+<input id="button_play_solo" class="btn" type="submit" value="Loading..." disabled>
+</form>
+<div id="footer_right">
+<span class="copyright">&copy; 2018 Šarūnas Visockas</span>
+<a class="hyperlink" href="credits.html">Credits</a>
+<a class="hyperlink" href="contacts.html">Contacts</a>
+<a class="hyperlink" href="privacy.html">Privacy</a>
+<a class="hyperlink bold yellow" href="http://iogames.space">More .io Games</a>
+<a class="hyperlink bold blue" href='https://ko-fi.com/P5P8A6GS' target="_blank">Support Me on Ko-fi</a>
+</div>
+<div id="footer_left">
+<a href="https://twitter.com/intent/user?screen_name=nightpoint_io" class="fab fa-twitter" target="_blank"></a>
+<a href="https://discord.gg/NnwTaQw" class="fab fa-discord" target="_blank"></a>
+<a href="https://www.facebook.com/battlepoint.io/" class="fab fa-facebook-f" target="_blank"></a>
+<a href="https://www.youtube.com/channel/UCuAfZRgp2_r4GK0ZW-A3W6w" class="fab fa-youtube" target="_blank"></a>
+</div>
+<div id="player_skin_selection_screen" class="skin_selection_screen hidden">
+<div id="skins_menu" class="skins_menu non_selectable">
+</div>
+</div>
+</div>
+<script src="https://cdn.ravenjs.com/3.26.4/raven.min.js" crossorigin="anonymous"></script>
+<script>Raven.config('https://ae65deb40032416a8efca4b0898f5570@sentry.io/1258156', {
+        whitelistUrls: [
+            'battlepoint.io/js', 
+            'cdn.ravenjs.com'
+        ]
+    }).install()</script>
+<script>
+        window.loadGameClient(function() {  //OnComplete
+            loadCookies();
+            populateServerList();
+            onFinishLoadingWebsite();
+            loadGameSounds(getCookie("battlepoint_volume"), getCookie("battlepoint_musicvolume"));
+        });
+    </script>
+<div id="gifts">
+<div id="gift_right">
+<div id='cdm-zone-02'></div>
+</div>
+<div id="gift_long">
+<div id='cdm-zone-01'></div>
+</div>
+</div>
+<div id="preroll"></div>
+
+<div id='cdm-zone-end'></div>
+</body>
+</html>
